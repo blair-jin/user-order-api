@@ -5,33 +5,32 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class NumberValidator {
-
     public static void validatePositive(long value) {
-        validateMin(value, 1);
+        if (value < 1) {
+            throw new IllegalArgumentException("VALUE_MUST_BE_POSITIVE");
+        }
     }
 
     public static void validateNonNegative(long value) {
-        validateMin(value, 0);
+        if (value < 0) {
+            throw new IllegalArgumentException("VALUE_MUST_BE_NON_NEGATIVA");
+        }
+    }
+
+    public static void validateGoe(long value, long min) {
+        if (value < min) {
+            throw new IllegalArgumentException("VALUE_BELOW_MIN");
+        }
+    }
+
+    public static void validateLoe(long value, long max) {
+        if (value > max) {
+            throw new IllegalArgumentException("VALUE_ABOVE_MAX");
+        }
     }
 
     public static void validateRange(long value, long min, long max) {
-        if (min < 0 || max < 0 || min > max) {
-            throw new IllegalArgumentException();
-        }
-
-        validateMin(value, min);
-        validateMax(value, max);
-    }
-
-    private static void validateMin(long value, long min) {
-        if (value < min) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private static void validateMax(long value, long max) {
-        if (value > max) {
-            throw new IllegalArgumentException();
-        }
+        validateGoe(value, min);
+        validateLoe(value, max);
     }
 }

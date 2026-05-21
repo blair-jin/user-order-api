@@ -5,59 +5,33 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringValidator {
-    private static final int DEFAULT_MIN_LENGTH = 0;
-    private static final int DEFAULT_MAX_LENGTH = 255;
+    private static final int SYSTEM_MAX_LENGTH = 255;
 
     public static void validate(String value) {
-        validate(value, DEFAULT_MIN_LENGTH, DEFAULT_MAX_LENGTH);
-    }
-
-    public static void validate(String value, int min) {
-        validate(value, min, DEFAULT_MAX_LENGTH);
-    }
-
-    public static void validate(String value, int min, int max) {
-        if (min < 0 || max < 0 || min > max) {
-            throw new IllegalArgumentException();
-        }
-        
-        validateNotNull(value);
-        validateTrimmed(value);
-        validateMaxLength(value, max);
-
-        if (min > 0) {
-            validateNotBlank(value);
-            validateMinLength(value, min);
-        }
-    }
-
-    private static void validateNotNull(String value) {
         if (value == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("VALUE_MUST_NOT_BE_NULL");
         }
-    }
-
-    private static void validateNotBlank(String value) {
         if (value.isBlank()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("VALUE_MUST_NOT_BE_BLANK");
+        }
+        if (value.length() > SYSTEM_MAX_LENGTH) {
+            throw new IllegalArgumentException("OUT_OF_SYSTEM_MAX_LENGTH");
         }
     }
 
-    private static void validateTrimmed(String value) {
-        if (!value.equals(value.trim())) {
-            throw new IllegalArgumentException();
-        }
-    }
+    public static void validateMinLength(String value, int min) {
+        validate(value);
 
-    private static void validateMinLength(String value, int min) {
         if (value.length() < min) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("LENGTH_BELOW_MIN");
         }
     }
 
-    private static void validateMaxLength(String value, int max) {
+    public static void validateMaxLength(String value, int max) {
+        validate(value);
+
         if (value.length() > max) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("LENGTH_ABOVE_MAX");
         }
     }
 }

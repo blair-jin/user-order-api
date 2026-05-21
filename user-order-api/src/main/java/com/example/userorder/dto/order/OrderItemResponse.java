@@ -4,16 +4,20 @@ import com.example.userorder.domain.order.OrderItem;
 
 public record OrderItemResponse(
         Long id,
-        String productName,
+        Long orderId,
+        Long productId,
         int orderQuantity,
-        long unitPrice
+        long unitPrice,
+        long totalPrice
 ) {
     public static OrderItemResponse from(OrderItem orderItem) {
         return new OrderItemResponse(
                 orderItem.getId(),
-                orderItem.getProduct().getName().value(),
-                orderItem.getOrderQuantity().value(),
-                orderItem.getUnitPrice().value()
+                orderItem.getOrder().getId(),
+                orderItem.getProductId(),
+                orderItem.getOrderQuantity(),
+                orderItem.getUnitPrice(),
+                orderItem.getUnitPrice() * orderItem.getOrderQuantity()
         );
     }
 }

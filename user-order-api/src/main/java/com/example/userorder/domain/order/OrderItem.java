@@ -2,12 +2,13 @@ package com.example.userorder.domain.order;
 
 import com.example.userorder.domain.common.BaseTimeEntity;
 import com.example.userorder.domain.common.vo.Money;
-import com.example.userorder.domain.order.vo.OrderQuantity;
-import com.example.userorder.domain.product.Product;
+import com.example.userorder.domain.common.vo.Quantity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,31 +20,26 @@ public class OrderItem extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @Column(nullable = false, updatable = false)
+    private Long productId;
 
-    @Embedded
-    private OrderQuantity orderQuantity;
+    @Column(nullable = false, updatable = false)
+    private int orderQuantity;
 
-    @Embedded
-    private Money unitPrice;
+    @Column(nullable = false, updatable = false)
+    private long unitPrice; // SNAPSHOT
 
-    private OrderItem(Order order, Product product, OrderQuantity orderQuantity) {
-        this.order = order;
-        this.product = product;
+    private OrderItem(Order order, Long productId, int orderQuantity, long unitPrice) {
+        this.order = Objects.requireNonNull(order);
+        this.productId = productId;
         this.orderQuantity = orderQuantity;
-        this.unitPrice = product.getUnitPrice();
+        this.unitPrice = unitPrice;
     }
 
-    static OrderItem createOrderItem(Order order, Product product, OrderQuantity orderQuantity) {
-        return new OrderItem(order, product, orderQuantity);
-    }
-
-    public Money calculateTotalPrice() {
-        return unitPrice.multiply(orderQuantity.value());
+    static OrderItem create(Order order, Long productId, Quantity orderQuantity, Money unitPrice) {
+        return new OrderItem(order, productId, orderQuantity.value(), unitPrice.value());
     }
 }

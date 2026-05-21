@@ -1,43 +1,31 @@
 package com.example.userorder.domain.common.vo;
 
 import com.example.userorder.common.NumberValidator;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
-@Embeddable
-@EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Money {
-    @Column(nullable = false)
-    private long amount;
-
-    private Money(long amount) {
-        NumberValidator.validateNonNegative(amount);
-        this.amount = amount;
+public record Money(
+        long value
+) {
+    public Money {
+        NumberValidator.validateNonNegative(value);
     }
 
-    public static Money of(long amount) {
-        return new Money(amount);
+    public static Money of(long value) {
+        return new Money(value);
     }
 
-    public long value() {
-        return amount;
+    public Money add(Money value) {
+        return Money.of(this.value + value.value);
     }
 
-    public static Money zero() {
-        return Money.of(0);
+    public Money subtract(Money value) {
+        return Money.of(this.value - value.value);
     }
 
-    public Money add(Money money) {
-        long result = this.amount + money.value();
-        return Money.of(result);
+    public Money multiply(long value) {
+        return Money.of(this.value * value);
     }
 
-    public Money multiply(int quantity) {
-        long result = this.amount * quantity;
-        return Money.of(result);
+    public Money multiply(Quantity value) {
+        return Money.of(this.value * value.value());
     }
 }

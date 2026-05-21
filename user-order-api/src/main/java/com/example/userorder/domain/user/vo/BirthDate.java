@@ -1,53 +1,32 @@
 package com.example.userorder.domain.user.vo;
 
-import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
-import java.time.Period;
+import java.util.Objects;
 
-@Embeddable
-@EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BirthDate {
-    private static final int MINIMUM_AGE = 14;
+public record BirthDate(
+        LocalDate value
+) {
+    private final static int MIN_AGE = 14;
 
-    private LocalDate birthDate;
-
-    private BirthDate(LocalDate birthDate) {
-        validateNotNull(birthDate);
-        validateNotFuture(birthDate);
-        validateMinAge(birthDate);
-
-        this.birthDate = birthDate;
+    public BirthDate {
+        Objects.requireNonNull(value);
+        validateNotFuture(value);
+        validateMinAge(value);
     }
 
-    public static BirthDate of(LocalDate birthDate) {
-        return new BirthDate(birthDate);
+    public static BirthDate of(LocalDate value) {
+        return new BirthDate(value);
     }
 
-    public LocalDate value() {
-        return birthDate;
-    }
-
-    private static void validateNotNull(LocalDate birthDate) {
-        if (birthDate == null) {
-            throw new IllegalArgumentException();
+    private static void validateNotFuture(LocalDate value) {
+        if (value.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("BIRTH_DATE_CANNOT_BE_IN_FUTURE");
         }
     }
 
-    private static void validateNotFuture(LocalDate birthDate) {
-        if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private static void validateMinAge(LocalDate birthDate) {
-        int age = Period.between(birthDate, LocalDate.now()).getYears();
-        if (age < MINIMUM_AGE) {
-            throw new IllegalArgumentException();
+    private static void validateMinAge(LocalDate value) {
+        if (value.isAfter(LocalDate.now().minusYears(MIN_AGE))) {
+            throw new IllegalArgumentException("AGE_BELOW_MINIMUM");
         }
     }
 }

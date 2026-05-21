@@ -2,62 +2,48 @@ package com.example.userorder.domain.product;
 
 import com.example.userorder.domain.common.BaseTimeEntity;
 import com.example.userorder.domain.common.vo.Money;
-import com.example.userorder.domain.order.vo.OrderQuantity;
-import com.example.userorder.domain.product.vo.ProductName;
-import com.example.userorder.domain.product.vo.RestockQuantity;
-import com.example.userorder.domain.product.vo.StockQuantity;
+import com.example.userorder.domain.common.vo.Quantity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "products")
-
 @Getter
+@Table(name = "products")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private ProductName name;
+    @Column(nullable = false)
+    private String name;
 
-    @Embedded
-    private Money unitPrice;
+    @Column(nullable = false)
+    private int stockQuantity;
 
-    @Embedded
-    private StockQuantity stockQuantity;
+    @Column(nullable = false)
+    private long unitPrice;
 
-    private Product(ProductName name, Money unitPrice, StockQuantity stockQuantity) {
+    private Product(String name, int stockQuantity, long unitPrice) {
         this.name = name;
-        this.unitPrice = unitPrice;
         this.stockQuantity = stockQuantity;
-    }
-
-    public static Product createProduct(ProductName name, Money unitPrice, StockQuantity stockQuantity) {
-        return new Product(name, unitPrice, stockQuantity);
-    }
-
-    public void updateName(ProductName name) {
-        this.name = name;
-    }
-
-    public void updateUnitPrice(Money unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public void updateStockQuantity(StockQuantity stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public static Product create(String name, Quantity quantity, Money unitPrice) {
+        return new Product(name, quantity.value(), unitPrice.value());
     }
 
-
-    public void increase(RestockQuantity restockQuantity) {
-        this.stockQuantity = stockQuantity.increaseStock(restockQuantity);
+    public void update(String name, Quantity stockQuantity, Money unitPrice) {
+        this.name = name;
+        this.stockQuantity = stockQuantity.value();
+        this.unitPrice = unitPrice.value();
     }
 
-    public void decrease(OrderQuantity orderQuantity) {
-        this.stockQuantity = stockQuantity.decreaseStock(orderQuantity);
+    public void decreaseStock(Quantity orderQuantity){
+        Quantity stockQuantity = Quantity.of(this.stockQuantity - orderQuantity.value());
+        this.stockQuantity = stockQuantity.value();
     }
 }
