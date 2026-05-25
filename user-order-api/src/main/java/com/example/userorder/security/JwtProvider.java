@@ -56,7 +56,7 @@ public class JwtProvider {
 
         Long userId = Long.valueOf(claims.getSubject());
         String loginId = claims.get("loginId", String.class);
-        String role = claims.get("role", String.class);
+        Role role = claims.get("role", Role.class);
 
         return new JwtUserInfo(userId, loginId, role);
     }
