@@ -1,8 +1,7 @@
 package com.example.userorder.application.order.facade;
 
 import com.example.userorder.application.order.service.OrderService;
-import com.example.userorder.dto.order.OrderResponse;
-import com.example.userorder.dto.order.OrderSearchCondition;
+import com.example.userorder.dto.order.OrderItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class GetOrdersUseCase {
+public class GetOrderItemsUseCase {
     private final OrderService orderService;
 
-    public Slice<OrderResponse> execute(Long userId, OrderSearchCondition condition, Pageable pageable) {
-        return orderService.searchOrders(userId, condition, pageable);
+    public Slice<OrderItemResponse> execute(Long userId, Long orderId, Pageable pageable) {
+        return orderService.searchOrderItems(userId, orderId, pageable);
     }
 }

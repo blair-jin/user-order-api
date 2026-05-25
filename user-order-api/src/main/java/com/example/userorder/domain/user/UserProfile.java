@@ -37,6 +37,7 @@ public class UserProfile extends BaseTimeEntity {
 
     public static UserProfile create(Long userId, UserName name, BirthDate birthDate, Email email) {
         validateProfileNotEmpty(name, birthDate, email);
+        
         return new UserProfile(
                 userId,
                 name != null ? name.value() : null,

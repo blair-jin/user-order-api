@@ -1,7 +1,7 @@
 package com.example.userorder.repository.product;
 
 import com.example.userorder.domain.product.Product;
-import com.example.userorder.dto.product.SearchProductCondition;
+import com.example.userorder.dto.product.ProductSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<Product> searchProducts(SearchProductCondition condition, Pageable pageable) {
+    public Slice<Product> searchProducts(ProductSearchCondition condition, Pageable pageable) {
         List<Product> products = queryFactory
                 .selectFrom(product)
                 .where(
@@ -52,11 +52,15 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanExpression priceGoe(Long min) {
-        return min != null ? product.unitPrice.goe(min) : null;
+        return min != null
+                ? product.unitPrice.goe(min)
+                : null;
     }
 
     private BooleanExpression priceLoe(Long max) {
-        return max != null ? product.unitPrice.loe(max) : null;
+        return max != null
+                ? product.unitPrice.loe(max)
+                : null;
     }
 
     private BooleanExpression isAfter(LocalDate startDate) {

@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Table(name = "products")
@@ -33,17 +35,28 @@ public class Product extends BaseTimeEntity {
     }
 
     public static Product create(String name, Quantity quantity, Money unitPrice) {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(unitPrice);
+
         return new Product(name, quantity.value(), unitPrice.value());
     }
 
     public void update(String name, Quantity stockQuantity, Money unitPrice) {
-        this.name = name;
-        this.stockQuantity = stockQuantity.value();
-        this.unitPrice = unitPrice.value();
+        if (name != null) {
+            this.name = name;
+        }
+
+        if (stockQuantity != null) {
+            this.stockQuantity = stockQuantity.value();
+        }
+
+        if (unitPrice != null) {
+            this.unitPrice = unitPrice.value();
+        }
     }
 
-    public void decreaseStock(Quantity orderQuantity){
-        Quantity stockQuantity = Quantity.of(this.stockQuantity - orderQuantity.value());
-        this.stockQuantity = stockQuantity.value();
+    public void decreaseStock(Quantity orderQuantity) {
+        this.stockQuantity = this.stockQuantity - orderQuantity.value();
     }
 }

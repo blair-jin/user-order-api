@@ -29,13 +29,20 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private User(LoginId loginId, Password password, Role role) {
-        this.loginId = loginId.value();
-        this.password = password.value();
-        this.role = Objects.requireNonNull(role);
+    private User(String loginId, String password, Role role) {
+        this.loginId = loginId;
+        this.password = password;
+        this.role = role == null ? Role.USER : role;
     }
 
     public static User create(LoginId loginId, Password password) {
-        return new User(loginId, password, Role.USER);
+        Objects.requireNonNull(loginId, "loginId must not be null");
+        Objects.requireNonNull(password, "password must not be null");
+
+        return new User(
+                loginId.value(),
+                password.value(),
+                Role.USER
+        );
     }
 }

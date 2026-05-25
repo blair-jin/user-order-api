@@ -28,9 +28,4 @@ public final class NumberValidator {
             throw new IllegalArgumentException("VALUE_ABOVE_MAX");
         }
     }
-
-    public static void validateRange(long value, long min, long max) {
-        validateGoe(value, min);
-        validateLoe(value, max);
-    }
 }

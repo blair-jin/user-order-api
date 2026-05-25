@@ -1,4 +1,4 @@
-package com.example.userorder.application.product;
+package com.example.userorder.application.product.model;
 
 import com.example.userorder.domain.common.vo.Money;
 import com.example.userorder.domain.common.vo.Quantity;

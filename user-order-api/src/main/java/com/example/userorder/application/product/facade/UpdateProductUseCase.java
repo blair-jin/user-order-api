@@ -1,6 +1,6 @@
 package com.example.userorder.application.product.facade;
 
-import com.example.userorder.application.product.ProductValues;
+import com.example.userorder.application.product.model.ProductValues;
 import com.example.userorder.application.product.service.ProductService;
 import com.example.userorder.domain.common.vo.Money;
 import com.example.userorder.domain.common.vo.Quantity;

@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Table(
@@ -37,14 +39,20 @@ public class CartItem {
     }
 
     public static CartItem create(Cart cart, Long productId, Quantity orderQuantity) {
+        Objects.requireNonNull(cart);
+        Objects.requireNonNull(productId);
+        Objects.requireNonNull(orderQuantity);
+        
         return new CartItem(cart, productId, orderQuantity.value());
     }
 
     public void increaseQuantity(Quantity orderQuantity) {
+        Objects.requireNonNull(orderQuantity);
         this.orderQuantity += orderQuantity.value();
     }
 
     public void updateQuantity(Quantity orderQuantity) {
+        Objects.requireNonNull(orderQuantity);
         this.orderQuantity = orderQuantity.value();
     }
 }

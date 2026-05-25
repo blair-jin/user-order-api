@@ -11,6 +11,6 @@ public class GetUserUseCase {
     private final UserService userService;
 
     public UserResponse execute(Long userId) {
-        return userService.getUser(userId);
+        return userService.get(userId);
     }
 }

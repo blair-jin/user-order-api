@@ -20,14 +20,15 @@ public class UserReader {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
+    public void validateLoginIdAvailable(LoginId loginId) {
+        if (userRepository.existsByLoginId(loginId.value())) {
+            throw new DuplicateLoginIdException();
+        }
+    }
+
     public User getById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-    }
-
-    public UserProfile getProfileByUserId(Long userId) {
-        return userProfileRepository.findByUserId(userId)
-                .orElseThrow(UserProfileNotFoundException::new);
     }
 
     public User getByLoginIdForLogin(LoginId loginId) {
@@ -35,9 +36,12 @@ public class UserReader {
                 .orElseThrow(InvalidLoginException::new);
     }
 
-    public void validateLoginIdAvailable(LoginId loginId) {
-        if (userRepository.existsByLoginId(loginId.value())) {
-            throw new DuplicateLoginIdException();
-        }
+    public boolean hasProfileById(Long userProfileId) {
+        return userProfileRepository.existsById(userProfileId);
+    }
+
+    public UserProfile getProfileByUserId(Long userId) {
+        return userProfileRepository.findByUserId(userId)
+                .orElseThrow(UserProfileNotFoundException::new);
     }
 }

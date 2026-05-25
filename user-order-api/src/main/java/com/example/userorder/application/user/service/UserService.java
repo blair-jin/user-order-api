@@ -59,7 +59,6 @@ public class UserService {
         );
 
         userProfileRepository.save(profile);
-
     }
 
     public UserLoginResponse login(LoginId loginId, RawPassword password) {
@@ -71,7 +70,7 @@ public class UserService {
         return new UserLoginResponse(token);
     }
 
-    public UserResponse getUser(Long userId) {
+    public UserResponse get(Long userId) {
         User user = userReader.getById(userId);
         return UserResponse.from(user);
     }
@@ -92,6 +91,11 @@ public class UserService {
     public void delete(Long userId) {
         User user = userReader.getById(userId);
         userRepository.delete(user);
+
+        if (userReader.hasProfileById(user.getId())) {
+            UserProfile profile = userReader.getProfileByUserId(user.getId());
+            userProfileRepository.delete(profile);
+        }
     }
 
     @Transactional

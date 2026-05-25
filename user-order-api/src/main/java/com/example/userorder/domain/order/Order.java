@@ -3,6 +3,7 @@ package com.example.userorder.domain.order;
 import com.example.userorder.domain.common.BaseTimeEntity;
 import com.example.userorder.domain.common.vo.Money;
 import com.example.userorder.domain.common.vo.Quantity;
+import com.example.userorder.domain.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,28 +23,35 @@ public class Order extends BaseTimeEntity {
     private Long id;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+    private final List<OrderItem> items = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
     private Long userId;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    private long totalPrice = 0; // SNAPSHOT
+    @Column(nullable = false, updatable = false)
+    private long totalAmount = 0; // SNAPSHOT
 
     private Order(Long userId) {
-        this.userId = Objects.requireNonNull(userId);
+        this.userId = userId;
         this.orderStatus = OrderStatus.ORDERED;
     }
 
     public static Order create(Long userId) {
+        Objects.requireNonNull(userId);
         return new Order(userId);
     }
 
-    public void addItem(Long productId, Quantity orderQuantity, Money unitPrice) {
-        OrderItem item = OrderItem.create(this, productId, orderQuantity, unitPrice);
-        this.totalPrice += item.getUnitPrice() * item.getOrderQuantity();
+    public void addItem(Product product, Quantity orderQuantity, Money unitPrice) {
+        Objects.requireNonNull(product);
+        Objects.requireNonNull(orderQuantity);
+        Objects.requireNonNull(unitPrice);
+
+        OrderItem item = OrderItem.create(this, product, orderQuantity, unitPrice);
         this.items.add(item);
+        this.totalAmount += orderQuantity.value() * unitPrice.value();
     }
 }

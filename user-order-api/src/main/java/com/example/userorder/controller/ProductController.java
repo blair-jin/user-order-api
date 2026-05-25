@@ -4,12 +4,13 @@ import com.example.userorder.application.product.facade.*;
 import com.example.userorder.dto.product.ProductCreateRequest;
 import com.example.userorder.dto.product.ProductResponse;
 import com.example.userorder.dto.product.ProductUpdateRequest;
-import com.example.userorder.dto.product.SearchProductCondition;
+import com.example.userorder.dto.product.ProductSearchCondition;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +26,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public void create(
             @Valid @RequestBody ProductCreateRequest request
     ) {
@@ -33,7 +35,7 @@ public class ProductController {
 
     @GetMapping
     public Slice<ProductResponse> searchProducts(
-            @ModelAttribute SearchProductCondition condition,
+            @ModelAttribute ProductSearchCondition condition,
             Pageable pageable
     ) {
         return searchProductUseCase.execute(condition, pageable);
@@ -47,6 +49,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(
             @PathVariable Long productId,
@@ -56,6 +59,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable Long productId

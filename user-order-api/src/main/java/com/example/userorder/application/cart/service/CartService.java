@@ -34,8 +34,9 @@ public class CartService {
     public void addItem(Long userId, Long productId, Quantity orderQuantity) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseGet(() -> cartRepository.save(Cart.create(userId)));
-        productReader.existsById(productId);
-        addOrIncreaseItem(cart, productId, orderQuantity);
+
+        Product product = productReader.getProductById(productId);
+        addOrIncreaseItem(cart, product.getId(), orderQuantity);
     }
 
     public Slice<CartItemResponse> getItems(Long userId, Pageable pageable) {
@@ -56,7 +57,7 @@ public class CartService {
         CartItem item = cartReader.getItemByCartIdAndId(cart.getId(), cartItemId);
         Product product = productReader.getProductById(item.getProductId());
 
-        return CartItemResponse.from(cart.getId(), product, item);
+        return CartItemResponse.from(product, item);
     }
 
     @Transactional
@@ -93,10 +94,12 @@ public class CartService {
     private Slice<CartItemResponse> toCartItemResponses(Long cartId, Map<Long, Product> productMap, Slice<CartItem> items) {
         return items.map(item -> {
             Product product = productMap.get(item.getProductId());
+
             if (product == null) {
                 throw new ProductNotFoundException();
             }
-            return CartItemResponse.from(cartId, product, item);
+
+            return CartItemResponse.from(product, item);
         });
     }
 }

@@ -2,7 +2,7 @@ package com.example.userorder.dto.product;
 
 import java.time.LocalDate;
 
-public record SearchProductCondition(
+public record ProductSearchCondition(
         String name,
         Long minPrice,
         Long maxPrice,
