@@ -54,4 +54,11 @@ public class Order extends BaseTimeEntity {
         this.items.add(item);
         this.totalAmount += orderQuantity.value() * unitPrice.value();
     }
+
+    public void cancel() {
+        if (!this.orderStatus.canChangeTo(OrderStatus.CANCELED)) {
+            throw new IllegalArgumentException();
+        }
+        this.orderStatus = OrderStatus.CANCELED;
+    }
 }

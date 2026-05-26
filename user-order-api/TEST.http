@@ -1,0 +1,2 @@
+GET http://localhost:8080/users/me/profile
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3Nzk4MDMwMDYsImV4cCI6MTc3OTgwMzAwNiwic3ViIjoiMiIsImxvZ2luSWQiOiJzdHJpbmciLCJyb2xlIjoiVVNFUiJ9.b-13N2UUcZpknvi19ovUXw-kVWnZUhEr5SR8pv8Km7qm5VG257XveN316Vg2YkOC

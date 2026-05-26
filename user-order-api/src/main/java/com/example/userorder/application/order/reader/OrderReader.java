@@ -9,6 +9,8 @@ import com.example.userorder.repository.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class OrderReader {
@@ -29,5 +31,15 @@ public class OrderReader {
     public OrderItem getItemByOrderIdAndIdAndUserId(Long orderId, Long orderItemId, Long userId) {
         return orderItemRepository.findByOrder_IdAndIdAndOrder_UserId(orderId, orderItemId, userId)
                 .orElseThrow(OrderItemNotFoundException::new);
+    }
+
+    public List<OrderItem> getAllByOrderId(Long orderId) {
+        List<OrderItem> items = orderItemRepository.findAllByOrder_Id(orderId);
+
+        if (items.isEmpty()) {
+            throw new OrderItemNotFoundException();
+        }
+
+        return items;
     }
 }

@@ -25,6 +25,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
 
     // Database
     runtimeOnly 'com.mysql:mysql-connector-j'

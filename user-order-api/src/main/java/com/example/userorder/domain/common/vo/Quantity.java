@@ -13,8 +13,8 @@ public record Quantity(
         return new Quantity(value);
     }
 
-    public Quantity add(Quantity value) {
-        return Quantity.of(this.value + value.value);
+    public Quantity add(int value) {
+        return Quantity.of(this.value + value);
     }
 
     public Quantity subtract(Quantity value) {

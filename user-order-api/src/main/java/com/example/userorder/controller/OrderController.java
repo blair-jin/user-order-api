@@ -1,9 +1,6 @@
 package com.example.userorder.controller;
 
-import com.example.userorder.application.order.facade.CreateOrderUseCase;
-import com.example.userorder.application.order.facade.GetOrderItemUseCase;
-import com.example.userorder.application.order.facade.GetOrderItemsUseCase;
-import com.example.userorder.application.order.facade.GetOrdersUseCase;
+import com.example.userorder.application.order.facade.*;
 import com.example.userorder.dto.order.OrderItemResponse;
 import com.example.userorder.dto.order.OrderResponse;
 import com.example.userorder.dto.order.OrderSearchCondition;
@@ -12,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +21,11 @@ public class OrderController {
     private final GetOrdersUseCase getOrdersUseCase;
     private final GetOrderItemsUseCase getOrderItemsUseCase;
     private final GetOrderItemUseCase getOrderItemUseCase;
+    private final CancelOrderUseCase cancelOrderUseCase;
 
     @PostMapping
-    public void create(@AuthenticationPrincipal CustomUserPrincipal principal) {
-        createOrderUseCase.execute(principal.userId());
+    public OrderResponse create(@AuthenticationPrincipal CustomUserPrincipal principal) {
+        return createOrderUseCase.execute(principal.userId());
     }
 
     @GetMapping
@@ -53,5 +52,11 @@ public class OrderController {
             @PathVariable Long orderId, @PathVariable Long orderItemId
     ) {
         return getOrderItemUseCase.execute(principal.userId(), orderId, orderItemId);
+    }
+
+    @DeleteMapping("/{orderId}/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancel(@AuthenticationPrincipal CustomUserPrincipal principal, @PathVariable Long orderId) {
+        cancelOrderUseCase.execute(principal.userId(), orderId);
     }
 }

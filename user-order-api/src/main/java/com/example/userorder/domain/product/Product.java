@@ -28,6 +28,9 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private long unitPrice;
 
+    @Version
+    private Long version;
+
     private Product(String name, int stockQuantity, long unitPrice) {
         this.name = name;
         this.stockQuantity = stockQuantity;
@@ -57,6 +60,18 @@ public class Product extends BaseTimeEntity {
     }
 
     public void decreaseStock(Quantity orderQuantity) {
+        Objects.requireNonNull(orderQuantity);
+
+        if (this.stockQuantity < orderQuantity.value()) {
+            throw new IllegalArgumentException("Not enough stock");
+        }
+
         this.stockQuantity = this.stockQuantity - orderQuantity.value();
+    }
+
+    public void increaseStock(Quantity quantity) {
+        Objects.requireNonNull(quantity);
+        
+        this.stockQuantity = quantity.add(this.stockQuantity).value();
     }
 }

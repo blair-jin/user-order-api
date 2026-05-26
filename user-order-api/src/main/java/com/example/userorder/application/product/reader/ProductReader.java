@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -15,12 +16,6 @@ import java.util.List;
 public class ProductReader {
     private final ProductRepository productRepository;
 
-    public void existsById(Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ProductNotFoundException();
-        }
-    }
-
     public List<Product> getProductsByIds(List<Long> productIds) {
         return productRepository.findAllById(productIds);
     }
@@ -28,5 +23,12 @@ public class ProductReader {
     public Product getProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
+    }
+
+    public List<Product> getProductsByIdsWithPessimisticLock(List<Long> productIds) {
+        return productRepository.findAllByIdWithPessimisticLock(productIds).stream()
+                .distinct()
+                .sorted(Comparator.comparing(Product::getId))
+                .toList();
     }
 }

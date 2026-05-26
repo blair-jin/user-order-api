@@ -31,7 +31,7 @@ public class JwtProvider {
                 .expiration(expiry)
                 .subject(userId.toString())
                 .claim("loginId", loginId)
-                .claim("role", role)
+                .claim("role", role.name())
                 .compact();
     }
 
@@ -56,7 +56,7 @@ public class JwtProvider {
 
         Long userId = Long.valueOf(claims.getSubject());
         String loginId = claims.get("loginId", String.class);
-        Role role = claims.get("role", Role.class);
+        Role role = Role.valueOf(claims.get("role", String.class));
 
         return new JwtUserInfo(userId, loginId, role);
     }

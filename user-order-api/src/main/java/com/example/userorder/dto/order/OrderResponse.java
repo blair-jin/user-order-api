@@ -4,7 +4,7 @@ import com.example.userorder.domain.order.Order;
 import com.example.userorder.domain.order.OrderStatus;
 
 public record OrderResponse(
-        Long id,
+        Long orderId,
         long totalPrice,
         OrderStatus orderStatus
 ) {
