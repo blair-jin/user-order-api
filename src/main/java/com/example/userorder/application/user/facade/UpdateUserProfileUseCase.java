@@ -1,7 +1,7 @@
 package com.example.userorder.application.user.facade;
 
 import com.example.userorder.application.user.model.UserProfileValues;
-import com.example.userorder.application.user.service.UserService;
+import com.example.userorder.application.user.service.UserCommandService;
 import com.example.userorder.domain.user.vo.BirthDate;
 import com.example.userorder.domain.user.vo.Email;
 import com.example.userorder.domain.user.vo.UserName;
@@ -14,8 +14,7 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 public class UpdateUserProfileUseCase {
-
-    private final UserService userService;
+    private final UserCommandService userCommandService;
 
     public void execute(Long userId, UserProfileUpdateRequest request) {
         if (!hasProfileInput(request)) {
@@ -25,7 +24,7 @@ public class UpdateUserProfileUseCase {
         UserProfileValues profileValues
                 = toProfileValues(request.name(), request.birthDate(), request.email());
 
-        userService.updateProfile(userId, profileValues);
+        userCommandService.updateProfile(userId, profileValues);
     }
 
     private boolean hasProfileInput(UserProfileUpdateRequest request) {

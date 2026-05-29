@@ -1,5 +1,6 @@
 package com.example.userorder.domain.user;
 
+import com.example.userorder.application.user.model.UserProfileValues;
 import com.example.userorder.domain.common.BaseTimeEntity;
 import com.example.userorder.domain.user.vo.BirthDate;
 import com.example.userorder.domain.user.vo.Email;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Table(name = "user_profiles")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +36,18 @@ public class UserProfile extends BaseTimeEntity {
         this.email = email;
     }
 
-    public static UserProfile create(Long userId, UserName name, BirthDate birthDate, Email email) {
-        validateProfileNotEmpty(name, birthDate, email);
-        
+    public static UserProfile create(Long userId, UserProfileValues profileValues) {
+        Objects.requireNonNull(profileValues, "profileValues must not be null");
+
+        if (profileValues.isEmpty()) {
+            throw new IllegalArgumentException("USER_PROFILE_EMPTY");
+        }
+
         return new UserProfile(
                 userId,
-                name != null ? name.value() : null,
-                birthDate != null ? birthDate.value() : null,
-                email != null ? email.value() : null
+                profileValues.userName() != null ? profileValues.userName().value() : null,
+                profileValues.birthDate() != null ? profileValues.birthDate().value() : null,
+                profileValues.email() != null ? profileValues.email().value() : null
         );
     }
 
@@ -57,12 +62,6 @@ public class UserProfile extends BaseTimeEntity {
 
         if (email != null) {
             this.email = email.value();
-        }
-    }
-
-    private static void validateProfileNotEmpty(UserName name, BirthDate birthDate, Email email) {
-        if (name == null && birthDate == null && email == null) {
-            throw new IllegalArgumentException("USER_PROFILE_EMPTY");
         }
     }
 }
