@@ -24,7 +24,6 @@ public class LoginFailService {
     }
 
     public void resetFailCount(LoginId loginId) {
-
         String key = "login:failCount:" + loginId.value();
         redisTemplate.delete(key);
     }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class LoginUserUseCase {
+public class LoginUseCase {
     private final LoginFailService loginFailService;
     private final UserQueryService userQueryService;
 

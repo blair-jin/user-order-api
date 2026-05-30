@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
-    private final LoginUserUseCase loginUserUseCase;
+    private final LoginUseCase loginUseCase;
     private final GetUserUseCase getUserUseCase;
     private final GetUserProfileUseCase getUserProfileUseCase;
     private final UpdateUserProfileUseCase updateUserProfileUseCase;
@@ -34,7 +34,7 @@ public class UserController {
     public UserLoginResponse login(
             @Valid @RequestBody UserLoginRequest request
     ) {
-        return loginUserUseCase.execute(request);
+        return loginUseCase.execute(request);
     }
 
     @GetMapping("/me")
