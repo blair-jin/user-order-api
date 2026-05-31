@@ -7,6 +7,10 @@ spring:
     user:
       name: disable
       password: disable
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   jpa:
     open-in-view: false
@@ -19,4 +23,5 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET:local-dev-secret-key-must-be-long-enough-1234567890}
-  expiration: ${JWT_EXPIRATION:3600000}
+  access_expiration: ${JWT_ACCESS_EXPIRATION:3600000}
+  refresh_expiration: ${JWT_REFRESH_EXPIRATION:604800000}

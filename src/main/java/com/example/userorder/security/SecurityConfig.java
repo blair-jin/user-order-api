@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .sessionManagement(SessionManagementConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login", "/users/refresh").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
 
                         .requestMatchers("/orders/**").hasRole("USER")

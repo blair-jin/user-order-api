@@ -1,8 +1,8 @@
-package com.example.userorder.dto.user;
+package com.example.userorder.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UserLoginRequest(
+public record LoginRequest(
         @NotBlank(message = "Login ID is required")
         String loginId,
 

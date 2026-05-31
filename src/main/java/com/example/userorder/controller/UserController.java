@@ -1,6 +1,11 @@
 package com.example.userorder.controller;
 
+import com.example.userorder.application.auth.facade.RefreshTokenFacade;
 import com.example.userorder.application.user.facade.*;
+import com.example.userorder.dto.auth.AccessTokenResponse;
+import com.example.userorder.dto.auth.RefreshTokenRequest;
+import com.example.userorder.dto.auth.LoginRequest;
+import com.example.userorder.dto.auth.LoginResponse;
 import com.example.userorder.dto.user.*;
 import com.example.userorder.security.CustomUserPrincipal;
 import jakarta.validation.Valid;
@@ -21,6 +26,7 @@ public class UserController {
     private final UpdateUserProfileUseCase updateUserProfileUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
     private final DeleteUserProfileUseCase deleteUserProfileUseCase;
+    private final RefreshTokenFacade refreshTokenFacade;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,10 +37,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserLoginResponse login(
-            @Valid @RequestBody UserLoginRequest request
+    public LoginResponse login(
+            @Valid @RequestBody LoginRequest request
     ) {
         return loginUseCase.execute(request);
+    }
+
+    @PostMapping("/refresh")
+    public AccessTokenResponse refresh(
+            @Valid @RequestBody RefreshTokenRequest request
+    ) {
+        return refreshTokenFacade.execute(request);
     }
 
     @GetMapping("/me")

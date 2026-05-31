@@ -7,7 +7,7 @@ import com.example.userorder.domain.user.User;
 import com.example.userorder.domain.user.UserProfile;
 import com.example.userorder.dto.user.UserProfileResponse;
 import com.example.userorder.dto.user.UserResponse;
-import com.example.userorder.security.JwtProvider;
+import com.example.userorder.security.JwtUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,16 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserQueryService {
     private final UserReader userReader;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
 
-    public String login(LoginCommand command) {
+    public JwtUserInfo login(LoginCommand command) {
         User user = userReader.getByLoginIdForLogin(command.loginId());
 
         if (!passwordEncoder.matches(command.rawPassword().value(), user.getPassword())) {
             throw new InvalidLoginException();
         }
 
-        return jwtProvider.createToken(user.getId(), user.getLoginId(), user.getRole());
+        JwtUserInfo userInfo = new JwtUserInfo(user.getId(), user.getLoginId(), user.getRole());
+        return userInfo;
     }
 
     public UserResponse get(Long userId) {
@@ -39,5 +39,10 @@ public class UserQueryService {
     public UserProfileResponse getProfile(Long userId) {
         UserProfile profile = userReader.getProfileByUserId(userId);
         return UserProfileResponse.from(profile);
+    }
+
+    public JwtUserInfo getJwtUserInfo(Long userId) {
+        User user = userReader.getById(userId);
+        return new JwtUserInfo(user.getId(), user.getLoginId(), user.getRole());
     }
 }
