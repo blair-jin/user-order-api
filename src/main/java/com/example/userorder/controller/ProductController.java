@@ -1,6 +1,6 @@
 package com.example.userorder.controller;
 
-import com.example.userorder.application.product.facade.*;
+import com.example.userorder.application.product.usecase.*;
 import com.example.userorder.dto.product.ProductCreateRequest;
 import com.example.userorder.dto.product.ProductResponse;
 import com.example.userorder.dto.product.ProductUpdateRequest;

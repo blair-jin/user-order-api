@@ -1,10 +1,10 @@
 package com.example.userorder.controller;
 
-import com.example.userorder.application.order.facade.*;
+import com.example.userorder.application.order.usecase.*;
 import com.example.userorder.dto.order.OrderItemResponse;
 import com.example.userorder.dto.order.OrderResponse;
 import com.example.userorder.dto.order.OrderSearchCondition;
-import com.example.userorder.security.CustomUserPrincipal;
+import com.example.userorder.security.principal.CustomUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,13 +1,14 @@
 package com.example.userorder.controller;
 
-import com.example.userorder.application.auth.facade.RefreshTokenFacade;
-import com.example.userorder.application.user.facade.*;
-import com.example.userorder.dto.auth.AccessTokenResponse;
-import com.example.userorder.dto.auth.RefreshTokenRequest;
-import com.example.userorder.dto.auth.LoginRequest;
-import com.example.userorder.dto.auth.LoginResponse;
-import com.example.userorder.dto.user.*;
-import com.example.userorder.security.CustomUserPrincipal;
+import com.example.userorder.application.auth.usecase.LoginUseCase;
+import com.example.userorder.application.auth.usecase.LogoutUseCase;
+import com.example.userorder.application.auth.usecase.RefreshTokenUseCase;
+import com.example.userorder.application.user.usecase.*;
+import com.example.userorder.dto.user.UserCreateRequest;
+import com.example.userorder.dto.user.UserProfileResponse;
+import com.example.userorder.dto.user.UserProfileUpdateRequest;
+import com.example.userorder.dto.user.UserResponse;
+import com.example.userorder.security.principal.CustomUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,8 @@ public class UserController {
     private final UpdateUserProfileUseCase updateUserProfileUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
     private final DeleteUserProfileUseCase deleteUserProfileUseCase;
-    private final RefreshTokenFacade refreshTokenFacade;
+    private final RefreshTokenUseCase refreshTokenUseCase;
+    private final LogoutUseCase logoutUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,20 +36,6 @@ public class UserController {
             @Valid @RequestBody UserCreateRequest request
     ) {
         createUserUseCase.execute(request);
-    }
-
-    @PostMapping("/login")
-    public LoginResponse login(
-            @Valid @RequestBody LoginRequest request
-    ) {
-        return loginUseCase.execute(request);
-    }
-
-    @PostMapping("/refresh")
-    public AccessTokenResponse refresh(
-            @Valid @RequestBody RefreshTokenRequest request
-    ) {
-        return refreshTokenFacade.execute(request);
     }
 
     @GetMapping("/me")

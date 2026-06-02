@@ -1,16 +1,18 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/springdb}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/userorder}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root1234}
+
   security:
     user:
       name: disable
       password: disable
+
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
   jpa:
     open-in-view: false
@@ -20,6 +22,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+redis:
+  login-fail:
+    ttl: 30m
+    max-count: 5
+
+  email-verification:
+    ttl: 3m
 
 jwt:
   secret: ${JWT_SECRET:local-dev-secret-key-must-be-long-enough-1234567890}

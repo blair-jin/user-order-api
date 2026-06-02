@@ -7,7 +7,7 @@ import com.example.userorder.domain.user.User;
 import com.example.userorder.domain.user.UserProfile;
 import com.example.userorder.dto.user.UserProfileResponse;
 import com.example.userorder.dto.user.UserResponse;
-import com.example.userorder.security.JwtUserInfo;
+import com.example.userorder.security.jwt.JwtUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

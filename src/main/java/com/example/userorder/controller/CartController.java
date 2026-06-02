@@ -1,10 +1,10 @@
 package com.example.userorder.controller;
 
-import com.example.userorder.application.cart.facade.*;
+import com.example.userorder.application.cart.usecase.*;
 import com.example.userorder.dto.cart.CartItemAddRequest;
 import com.example.userorder.dto.cart.CartItemResponse;
 import com.example.userorder.dto.cart.CartItemUpdateRequest;
-import com.example.userorder.security.CustomUserPrincipal;
+import com.example.userorder.security.principal.CustomUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
