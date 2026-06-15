@@ -6,7 +6,7 @@ public record Money(
         long value
 ) {
     public Money{
-        if(value<0){
+        if(value <= 0){
             throw new InvalidValueException("Money", "Money cannot be negative.");
         }
     }
