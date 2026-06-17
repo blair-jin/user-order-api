@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.Optional;
 
-public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+public interface OrderRepository extends
+        JpaRepository<Order, Long>,
+        JpaSpecificationExecutor<Order>,
+        OrderRepositoryCustom
+{
     Optional<Order> findByUserIdAndId(Long userId, Long id);
 }

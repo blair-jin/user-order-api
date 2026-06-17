@@ -1,4 +1,4 @@
-package io.github.blairjin.user_order_api.infrastructure.specification;
+package io.github.blairjin.user_order_api.repository.order.specification;
 
 import io.github.blairjin.user_order_api.domain.order.Order;
 import io.github.blairjin.user_order_api.domain.order.OrderStatus;

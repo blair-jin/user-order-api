@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static io.github.blairjin.user_order_api.domain.product.QProduct.product;
@@ -23,7 +24,9 @@ public class ProductRepositoryImpl {
                 .where(
                         keywordContains(condition.keyword()),
                         minPrice(condition.minPrice()),
-                        maxPrice(condition.maxPrice())
+                        maxPrice(condition.maxPrice()),
+                        startDate(condition.startDate()),
+                        startDate(condition.endDate())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize()+1)
@@ -48,5 +51,15 @@ public class ProductRepositoryImpl {
 
     private BooleanExpression maxPrice(Long maxPrice){
         return maxPrice!=null ? product.unitPrice.loe(maxPrice) : null;
+    }
+
+    private BooleanExpression startDate(LocalDate startDate){
+        return startDate !=null ? product.createdAt.goe(startDate.atStartOfDay()) : null;
+    }
+
+    private BooleanExpression endDate(LocalDate endDate){
+        return endDate != null
+                ? product.createdAt.loe(endDate.plusDays(1).atStartOfDay())
+                : null;
     }
 }

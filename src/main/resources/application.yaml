@@ -11,7 +11,7 @@ spring:
     password: ${DB_PASSWORD:root1234}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
 
 jwt:
@@ -30,4 +30,5 @@ redis:
 logging:
   level:
     org.springframework.security: TRACE
-
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
