@@ -1,0 +1,78 @@
+package io.github.blairjeon.userorderapi.exception;
+
+import io.github.blairjeon.userorderapi.dto.common.ErrorResponse;
+import io.github.blairjeon.userorderapi.exception.BAD_REQUEST.*;
+import io.github.blairjeon.userorderapi.exception.CONFLICT.DuplicateLoginIdException;
+import io.github.blairjeon.userorderapi.exception.LOCKED.AccountLockedException;
+import io.github.blairjeon.userorderapi.exception.NOT_FOUND.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler({
+            InvalidLoginException.class,
+            InvalidTokenException.class,
+            InvalidOrderStatusException.class,
+            InsufficientStockException.class,
+            InvalidValueException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(RuntimeException e){
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(
+            MethodArgumentNotValidException e
+    ) {
+        String message = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                message
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            UserProfileNotFoundException.class,
+            UserAddressNotFoundException.class,
+            ProductNotFoundException.class,
+            OrderNotFoundException.class,
+            OrderItemNotFoundException.class,
+            CartNotFoundException.class,
+            CartItemNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException e){
+        ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler({
+            DuplicateLoginIdException.class
+    })
+    public ResponseEntity<ErrorResponse> handleConflict(RuntimeException e){
+        ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(AccountLockedException.class)
+    public ResponseEntity<ErrorResponse> handleLocked(RuntimeException e){
+        ErrorResponse response = new ErrorResponse(HttpStatus.LOCKED.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.LOCKED).body(response);
+    }
+}

@@ -1,6 +1,6 @@
 services:
   app:
-    image: blairjmin/user-order-api:latest
+    image: blair-jeon/user-order-api:latest
     ports:
       - 8080:8080
     env_file:
